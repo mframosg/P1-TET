@@ -2,6 +2,7 @@ from http import server
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import pandas as pd
 import json
+import serverVariables
 
 class Servidor(BaseHTTPRequestHandler):
 
@@ -70,9 +71,10 @@ class Servidor(BaseHTTPRequestHandler):
             data_city = data_city.to_csv('City.csv', index=False)
 
 def main():
-    PORT = 8006
-    server = HTTPServer(('', PORT), Servidor)
-    print("Servidor corriendo en el puerto", PORT)
+    
+    
+    server = HTTPServer(('', serverVariables.PORT), Servidor)
+    print("Servidor corriendo en el puerto", serverVariables.PORT)
     server.serve_forever()
 
     
