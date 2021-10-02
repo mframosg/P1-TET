@@ -33,14 +33,30 @@ class Servidor(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes(str(to_send), 'utf-8'))
         else:
-            res = { "error": { "code": 404, "message": "404 Resource Not Found" } }
+            res = { "error": { "code": 404, "message": "404 Resource not found" } }
             self.send_response(404)
             self.send_header("content-type", "application/json")
             self.end_headers()
             self.wfile.write(bytes(str(res), 'utf-8'))
-        
-    # def do_GET(self):
-    #     url = "http://"
+
+    def do_GET(self):
+        url = urlparse(self.path)
+        path = url.path
+        if(path.find("/consult/") == 0 ):
+            id = path[9:]
+            url = f"http://127.0.0.1/{id}"
+            r = requests.get(url)
+            data = r.json()
+            self.send_response(r.status_code)
+            self.send_header("content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(bytes(str(data), 'utf-8'))
+        else:
+            res = { "error": { "code": 404, "message": "404 Resource not found" } }
+            self.send_response(404)
+            self.send_header("content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(bytes(str(res), 'utf-8'))
 
 
 def main():
