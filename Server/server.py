@@ -1,58 +1,46 @@
-from http import server
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
+from urllib.parse import urlparse, parse_qs
 import serverVariables
+import json
+import requests
+
 
 class Servidor(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('content-type', 'text/html')
-        self.end_headers()
-        #self.wfile.write(self.path[1:].encode())
+    def do_POST(self):
+        url = urlparse(self.path)
+        path = url.path
 
-        user = str(self.path[1:]).split("/")
-        print(user)
+        if (path == '/create'):
+            length = int(self.headers.get('content-length'))
+            field_data = self.rfile.read(length)
+            entry = json.loads(field_data.decode('utf-8'))
+            header = {'content-type': 'application/json'}
+            
+            to_send = {'key': entry['id'], 'value': entry['name']}
+            requests.post(serverVariables.NAME_SERVER, data=to_send, headers=header)
+            
+            to_send = {'key': entry['id'], 'value': entry['age']}
+            requests.post(serverVariables.AGE_SERVER, data=to_send, headers=header)
+            
+            to_send = {'key': entry['id'], 'value': entry['city']}
+            requests.post(serverVariables.CITY_SERVER, data=to_send, headers=header)
+
+            to_send = {'key': entry['id'], 'value': entry['score']}
+            requests.post(serverVariables.SCORE_SERVER, data=to_send, headers=header)
+
+            self.send_response(201)
+            self.send_header("content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(bytes(str(to_send), 'utf-8'))
+        else:
+            res = { "error": { "code": 404, "message": "404 Resource Not Found" } }
+            self.send_response(404)
+            self.send_header("content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(bytes(str(res), 'utf-8'))
         
-        #2self.wfile.write(command)
-        
-        if user[0] == "X":
-            self.wfile.write("X".encode())
-            #break
-        elif user[0] == "A":
-            user_m = user[1].replace("<","").replace(">","").replace("(","").replace(")","").replace(" ","")
-
-            user_m2 = user_m.split(",") # {}
-            try:
-                datos = {} # Diccionario de datos que devuelve Miguel
-                names_file = open("Nombres.json", "r+")
-                names_text = names_file.read().replace("\n","")
-                names_data = json.loads(names_text)
-                names_data.update({datos['id']: datos['name']})
-                names_write = json.dumps(names_data)
-                names_file.write(names_write)
-
-                ages_file = open("Edades.json", "r+")
-                ages_text = ages_file.read().replace("\n","")
-                ages_data = json.loads(ages_text)
-                ages_data.update({datos['id']: datos['age']})
-                ages_write = json.dumps(ages_data)
-                ages_file.write(ages_write)
-
-                cities_file = open("Ciudades.json", "r+")
-                cities_text = cities_file.read().replace("\n","")
-                cities_data = json.loads(cities_text)
-                cities_data.update({datos['id']: datos['city']})
-                cities_write = json.dumps(cities_data)
-                cities_file.write(cities_write)
-
-                scores_file = open("Puntajes.json", "r+")    
-                scores_text = scores_file.read().replace("\n","")
-                scores_data = json.loads(scores_text)
-                scores_data.update({datos['id']: datos['score']})
-                scores_write = json.dumps(scores_data)
-                scores_file.write(scores_write)
-            except:
-                pass
+    # def do_GET(self):
+    #     url = "http://"
 
 
 def main():
@@ -60,6 +48,5 @@ def main():
     print("Servidor corriendo en el puerto", serverVariables.PORT)
     server.serve_forever()
 
-    
 if __name__ == '__main__':
     main()
