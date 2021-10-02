@@ -18,7 +18,8 @@ while(True): #tet
     print("add <key,value>")
     print("get <key>")
     print("list")
-    print("\nSyntax: tet <command> <params>\n")
+    print("\nSyntax: tet <command>\n")
+    print("Type enter, then follow the instructions.")
 
     def input_command():
         choice=input("Enter a command (or enter q to quit): ")
@@ -32,15 +33,36 @@ while(True): #tet
             input_command()
         return choice
     
+    register = [] 
     command = input_command()
     if command.split()[1] == "add":
-        kv = command[3].replace(" ", "")
-        values = kv.replace("<", "").replace(">", "").replace("(", "").replace(")", "").split(",")
+        cur = ""
+        while not cur.isnumeric():
+            cur = input("Enter you id: ")
+            if not cur.isnumeric():
+                print("You must enter a number.")
+        register.append(cur)
+        cur = input("Enter your name: ")
+        register.append(cur)
+        while not cur.isnumeric():
+            cur = input("Enter your age: ")
+            if not cur.isnumeric():
+                print("You must enter a number.")
+        register.append(cur)
+        cur = input("Enter your city: ")
+        register.append(cur)
+        while not cur.isnumeric():
+            cur = input("Enter your score: ")
+            if not cur.isnumeric():
+                print("You must enter a number.")
+        register.append(cur)
+
+        
     if command.split()[1] == "get":
         k = command[3:].replace(" ", "")
         values = k.replace("<", "").replace(">", "").replace("(", "").replace(")", "").split(",")
     if command.split()[1] == "list":
-        pass
+        pass #llamar a la función de listar o el procedimiento correspondiente
     
 
     #if(choice=="A"):
