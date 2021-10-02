@@ -43,10 +43,4 @@ while(True):
 
     requests.post(url, data = datos, headers = header)
 
-    
-    
-    #sol = client.getresponse()
-    #answer = sol.read().decode("utf-8")
-    #print(answer)
-
 print("Bye!")
