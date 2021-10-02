@@ -1,7 +1,5 @@
-import http.client
+import requests
 import clientVariables
-
-client = http.client.HTTPConnection(clientVariables.SERVER_IP, clientVariables.PORT)
 
 while(True):
 
@@ -27,8 +25,23 @@ while(True):
     elif(decision=="X"):
         break
     
-    client = http.client.HTTPConnection(clientVariables.SERVER_IP, clientVariables.PORT)
-    client.request("GET", f"/{decision}/{equ}") 
+    url = 'http://127.0.0.1/create'
+
+
+
+    datos = {
+        'id': '1001268576', 
+        'name': 'Juansedo', 
+        'age': '19', 
+        'city': 'Salgar', 
+        'score': '65'
+    }
+
+    header = {
+        'content-type': 'application/json'
+    }
+
+    requests.post(url, data = datos, headers = header)
 
     
     

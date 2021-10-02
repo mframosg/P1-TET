@@ -2,18 +2,24 @@ from http import server
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import pandas as pd
 import serverVariables
+from urllib.parse import urlparse, parse_qs
+
 
 class Servidor(BaseHTTPRequestHandler):
 
     def do_GET(self):
 
-        self.send_response(200)
-        self.send_header('content-type', 'text/html')
-        self.end_headers()
+        # self.send_response(200)
+        # self.send_header('content-type', 'text/html')
+        # self.end_headers()
         #self.wfile.write(self.path[1:].encode())
-
-        user = str(self.path[1:]).split("/")
+        # user = str(self.path[1:]).split("/")
+        user = urlparse(self.path)
+        path = user.path
+        query = parse_qs(user.query)
         print (user)
+        print(path)
+        print(query)
         
         #2self.wfile.write(command)
         
