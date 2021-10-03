@@ -3,8 +3,6 @@ from urllib.parse import urlparse, parse_qs
 import nodeVariables
 import os
 import json
-
-
 class DBServer(BaseHTTPRequestHandler):
 
     def do_POST(self):
@@ -16,17 +14,12 @@ class DBServer(BaseHTTPRequestHandler):
             field_data = self.rfile.read(length)
             entry = json.loads(field_data.decode('utf-8'))
 
-            fp = open('Node/data.json', 'r')
+            fp = open('data.json', 'r')
             read = json.load(fp)
-
-            if isinstance(entry, list):
-                for e in entry:
-                    read.append({e['key']: e['value']})
-            else:
-                read.append({entry['key']: entry['value']})
+            read.append(entry)
             fp.close()
 
-            f = open('Node/data.json', 'w')
+            f = open('data.json', 'w')
             json.dump(read, f)
             f.close()
 
@@ -36,27 +29,21 @@ class DBServer(BaseHTTPRequestHandler):
 
         if(path.find("/") == 0 ):
             id = path[1:]
-
-
-            fp = open('Node/data.json', 'r')
+            fp = open('data.json', 'r')
             data = json.load(fp)
-            datalist = [d for d in data if d[id]]
-          
-            if(datalist.get(id,{})):
-        
-                res={id : datalist.get(id,{})}
-                self.send_response(201)
-                self.send_header("content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(bytes(str(res), nodeVariables.ENCODING_FORMAT))
-        
-            else:
+            ids = [d for d in data if id in d]
+            if(len(ids) == 0):
                 res = { "error": { "code": 404, "message": "404 Resource Not Found" } }
                 self.send_response(404)
                 self.send_header("content-type", "application/json")
                 self.end_headers()
                 self.wfile.write(bytes(str(res), nodeVariables.ENCODING_FORMAT))
-
+            else:
+                res={'nombre' : ids[0][id]}
+                self.send_response(201)
+                self.send_header("content-type", "application/json")
+                self.end_headers()
+                self.wfile.write(bytes(str(res), nodeVariables.ENCODING_FORMAT))
 
 
 if __name__ == "__main__":
