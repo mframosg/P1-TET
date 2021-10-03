@@ -16,17 +16,18 @@ class Servidor(BaseHTTPRequestHandler):
             entry = json.loads(field_data.decode('utf-8'))
             header = {'content-type': 'application/json'}
             
-            to_send = {'key': entry['id'], 'value': entry['name']}
-            requests.post(serverVariables.NAME_SERVER, data=to_send, headers=header)
+            to_send = {"key": entry['id'], "value": entry['name']}
+            to_send = str(to_send).replace('\'',"\"")
+            requests.post(serverVariables.NAME_SERVER, data=str(to_send), headers=header)
             
-            to_send = {'key': entry['id'], 'value': entry['age']}
-            requests.post(serverVariables.AGE_SERVER, data=to_send, headers=header)
+            # to_send = {'key': entry['id'], 'value': entry['age']}
+            # requests.post(serverVariables.AGE_SERVER, data=to_send, headers=header)
             
-            to_send = {'key': entry['id'], 'value': entry['city']}
-            requests.post(serverVariables.CITY_SERVER, data=to_send, headers=header)
+            # to_send = {'key': entry['id'], 'value': entry['city']}
+            # requests.post(serverVariables.CITY_SERVER, data=to_send, headers=header)
 
-            to_send = {'key': entry['id'], 'value': entry['score']}
-            requests.post(serverVariables.SCORE_SERVER, data=to_send, headers=header)
+            # to_send = {'key': entry['id'], 'value': entry['score']}
+            # requests.post(serverVariables.SCORE_SERVER, data=to_send, headers=header)
 
             self.send_response(201)
             self.send_header("content-type", "application/json")
@@ -44,9 +45,9 @@ class Servidor(BaseHTTPRequestHandler):
         path = url.path
         if(path.find("/consult/") == 0 ):
             id = path[9:]
-            url = f"http://127.0.0.1/{id}"
+            url = f"http://127.0.0.1:8007/{id}"
             r = requests.get(url)
-            data = r.json()
+            data = r.text
             self.send_response(r.status_code)
             self.send_header("content-type", "application/json")
             self.end_headers()
