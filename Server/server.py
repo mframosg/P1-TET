@@ -18,19 +18,19 @@ class Servidor(BaseHTTPRequestHandler):
             
             to_send = {"key": entry['id'], "value": entry['name']}
             to_send = str(to_send).replace('\'',"\"")
-            requests.post(serverVariables.NAME_SERVER, data=str(to_send), headers=header)
+            requests.post(serverVariables.NAME_SERVER+serverVariables.ADD_LINK, data=str(to_send), headers=header)
             
             to_send = {"key": entry['id'], "value": entry['age']}
             to_send = str(to_send).replace('\'',"\"")
-            requests.post(serverVariables.AGE_SERVER, data=to_send, headers=header)
+            requests.post(serverVariables.AGE_SERVER+serverVariables.ADD_LINK, data=to_send, headers=header)
             
             to_send = {"key": entry['id'], "value": entry['city']}
             to_send = str(to_send).replace('\'',"\"")
-            requests.post(serverVariables.CITY_SERVER, data=to_send, headers=header)
+            requests.post(serverVariables.CITY_SERVER+serverVariables.ADD_LINK, data=to_send, headers=header)
 
             to_send = {"key": entry['id'], "value": entry['score']}
             to_send = str(to_send).replace('\'',"\"")
-            requests.post(serverVariables.SCORE_SERVER, data=to_send, headers=header)
+            requests.post(serverVariables.SCORE_SERVER+serverVariables.ADD_LINK, data=to_send, headers=header)
 
             res = { "succesfully": { "code": 201, "message": "User succesfully added" } }
             self.send_response(201)
@@ -49,26 +49,26 @@ class Servidor(BaseHTTPRequestHandler):
         path = url.path
         if(path.find("/consult/") == 0 ):
             id = path[9:]
-            url = f"http://127.0.0.1:8007/{id}"
+            url = serverVariables.NAME_SERVER+id
             r = requests.get(url)
             data = r.text
             data = data.replace("{","").replace("}","").replace("\'","")
             data = data.split(":")
 
-            url = f"http://127.0.0.1:8008/{id}"
+            url = serverVariables.AGE_SERVER+id
             r = requests.get(url)
             data1 = r.text
             data1 = data1.replace("{","").replace("}","").replace("\'","")
             data1 = data1.split(":")
             
 
-            url = f"http://127.0.0.1:8009/{id}"
+            url = serverVariables.CITY_SERVER+id
             r = requests.get(url)
             data2 = r.text
             data2 = data2.replace("{","").replace("}","").replace("\'","")
             data2 = data2.split(":")
 
-            url = f"http://127.0.0.1:8010/{id}"
+            url = serverVariables.SCORE_SERVER+id
             r = requests.get(url)
             data3 = r.text
             data3 = data3.replace("{","").replace("}","").replace("\'","")
