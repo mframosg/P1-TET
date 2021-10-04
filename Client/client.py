@@ -12,11 +12,12 @@ else:
 while(True): #tet
 
     print("\nWelcome to our distributed database system for our advanced networking class.\n")
-    print("Input <key,value> must meet the following pattern <unique key,(Name,Age,City)>\n")
+    print("Data is stored as <key,value>.\n It will contain this parameters: <unique key,(Name,Age,City)>\n")
     print("Example -->  <smaring1,(Simon,21,Medellin)>")
+    print("\nEach command will guide you through the process\n")
     print("\nList of available commands:")
-    print("add <key,value>")
-    print("get <key>")
+    print("add")
+    print("get")
     print("list")
     print("\nSyntax: tet <command>\n")
     print("Type enter, then follow the instructions.")
@@ -38,29 +39,28 @@ while(True): #tet
     if command.split()[1] == "add":
         cur = ""
         while not cur.isnumeric():
-            cur = input("Enter you id: ")
+            cur = input("Enter you id (number): ")
             if not cur.isnumeric():
                 print("You must enter a number.")
         register.append(cur)
         cur = input("Enter your name: ")
         register.append(cur)
         while not cur.isnumeric():
-            cur = input("Enter your age: ")
+            cur = input("Enter your age (number): ")
             if not cur.isnumeric():
                 print("You must enter a number.")
         register.append(cur)
         cur = input("Enter your city: ")
         register.append(cur)
         while not cur.isnumeric():
-            cur = input("Enter your score: ")
+            cur = input("Enter your score (number): ")
             if not cur.isnumeric():
                 print("You must enter a number.")
         register.append(cur)
 
         
     if command.split()[1] == "get":
-        k = command[3:].replace(" ", "")
-        values = k.replace("<", "").replace(">", "").replace("(", "").replace(")", "").split(",")
+        query = input("Enter the ID number of the register you want to find: ")
     if command.split()[1] == "list":
         pass #llamar a la función de listar o el procedimiento correspondiente
     
