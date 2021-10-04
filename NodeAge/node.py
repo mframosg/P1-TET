@@ -45,7 +45,7 @@ class DBServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(bytes(str(res), nodeVariables.ENCODING_FORMAT))
             else:
-                res={'name' : ids[0][id]}
+                res={'age' : ids[0][id]}
                 self.send_response(201)
                 self.send_header("content-type", "application/json")
                 self.end_headers()
