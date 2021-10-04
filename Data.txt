@@ -1,1 +1,0 @@
-cedula, nombre, edad, ciudad, puntaje del sisben
