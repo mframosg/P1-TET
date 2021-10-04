@@ -54,8 +54,13 @@ def main():
                 if not cur.isnumeric():
                     print("You must enter a number.")
             r=requests.get(clientVariables.URL + cur)
-            person = r.text.replace("}","").replace("{","").replace("\'","").split(',')
-            print(f"The id {cur} that you search is from : "+"\n"+person[0]+"\n"+person[1]+"\n"+person[2]+"\n"+person[3])
+            person = r.text.replace("[","").replace("]","").replace("\'","").replace("}","").replace("{","").split(':')
+            print(person)
+            if(person[0]=="error"):
+                print("Id not found")
+            else:
+                person = r.text.replace("}","").replace("{","").replace("\'","").split(',')
+                print(f"The id {cur} that you search is from : "+"\n"+person[0]+"\n"+person[1]+"\n"+person[2]+"\n"+person[3])
             
     
 
