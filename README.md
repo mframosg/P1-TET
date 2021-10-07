@@ -114,7 +114,7 @@ Los nodos nos sirven para almacenar datos de manera distribuida, teniendo un nod
 
 ### Servidor
 
-El servidor se encarga de comunicarse con los nodos y de asignarle una key a cada fragmento de datos que recibe. Antes de realizar el particionamiento, se asignará a cada fragmento una key que corresponde a la cédula del registro en cuestión, para identificar los diferentes fragmentos que conforman ese registro completo. Como las cédulas son únicas e irrepetibles, las usamos como keys. Es como cuando en una base de datos MySQL usamos una primary key que no se vaya a repetir. Posteriormente, se realiza el particionamiento de la forma **<cédula, nombre>**, **<cédula, nombre>**, **<cédula, edad>**, etc. Cada fragmento de datos se envía a su nodo correspondiente con una solicitud de tipo **POST**.
+El servidor se encarga de comunicarse con los nodos y de asignarle una key a cada fragmento de datos que recibe. Antes de realizar el particionamiento, se asignará a cada fragmento una key que corresponde a la cédula del registro en cuestión, para identificar los diferentes fragmentos que conforman ese registro completo. Como las cédulas son únicas e irrepetibles, las usamos como keys. Es como cuando en una base de datos MySQL usamos una primary key que no se vaya a repetir. Posteriormente, se realiza el particionamiento de la forma **<cédula, nombre>**, **<cédula, edad>**, **<cédula, ciudad>**, etc. Cada fragmento de datos se envía a su nodo correspondiente con una solicitud de tipo **POST**.
 
 El nodo recibe el **JSON** y posteriormente almacena la información.
 
