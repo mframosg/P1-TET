@@ -56,7 +56,7 @@ El cliente se comunica con el servidor a través de solicitudes tipo **GET** y  
 
 #### GET
 
-Se usa en el cliente para obtener información de la existencia de un determinado registro en nuestra base de datos. Se le pasa un **ID** de registro y se busca si este existe.
+Se usa en el cliente para obtener información de la existencia de un determinado registro en nuestra base de datos. Se le pasa un **ID** de registro y se consulta a los nodos si hay alguna información relacionada con el número de cédula suministrado.
 
 #### POST
 
@@ -69,7 +69,36 @@ Vamos a tener un registro de la forma:
     {
         "id": "12345678",
         "name": "Juan",
+        "age": "18",
         "city": "Cartagena",
+        "score": "400"
+    }
+
+Este registro se almacenará de tal forma que en el nodo de **Nombres** se vea así:
+
+    {
+        "id"; "12345678",
+        "name": "Juan"
+    }
+
+En el nodo de **Edades** encontraremos el registro así:
+
+    {
+        "id"; "12345678",
+        "age": "18"
+    }
+
+En el nodo de **Ciudades** encontraremos el registro así:
+
+    {
+        "id"; "12345678",
+        "age": "Cartagena"
+    }
+
+En el nodo de **Puntajes** encontraremos el registro así:
+
+    {
+        "id"; "12345678",
         "score": "400"
     }
 
@@ -77,8 +106,18 @@ Vamos a tener un registro de la forma:
 
 Este se encarga de distribuir el tráfico entre dos o más servidores, esto se hace con propósitos de escalabilidad.
 
-Podemos agregar tantos servidores como queramos. Todos los servidores tienen el mismo funcionamiento. Estos reciben una consulta, y si esta es de tipo **POST**, procede a hacer consultas tipo **POST** a los nodos. Est
+Podemos agregar tantos servidores como queramos. Todos los servidores tienen el mismo funcionamiento. Estos reciben una consulta, y si esta es de tipo **POST**, procede a hacer consultas tipo **POST** a los nodos.
 
-## Nodos
+### Nodos
 
-Los nodos nos sirven para almacenar datos de manera distribuida, teniendo un nodo para cada atributo del registro. Es decir: tenemos un nodo para los **nombres**, otro para las **ciuades**, otro para los **puntajes**. Recordemos que en cada nodo, el **ID** (cédula) se encuentra relacionado con el valor del atributo correspondiente al nodo en cuestión.
+Los nodos nos sirven para almacenar datos de manera distribuida, teniendo un nodo para cada atributo del registro. Es decir: tenemos un nodo para los **nombres**, otro para las **edades**, otro para las **ciuades**, otro para los **puntajes**. Recordemos que en cada nodo, el **ID** (cédula) se encuentra relacionado con el valor del atributo correspondiente al nodo en cuestión.
+
+### Servidor
+
+El servidor se encarga de comunicarse con los nodos y de asignarle una key a cada fragmento de datos que recibe. Antes de realizar el particionamiento, se asignará a cada fragmento una key que corresponde a la cédula del registro en cuestión, para identificar los diferentes fragmentos que conforman ese registro completo. Como las cédulas son únicas e irrepetibles, las usamos como keys. Es como cuando en una base de datos MySQL usamos una primary key que no se vaya a repetir. Posteriormente, se realiza el particionamiento de la forma **<cédula, nombre>**, **<cédula, nombre>**, **<cédula, edad>**, etc. Cada fragmento de datos se envía a su nodo correspondiente con una solicitud de tipo **POST**.
+
+El nodo recibe el **JSON** y posteriormente almacena la información.
+
+### Consultas
+
+Para realizar la búsqueda de un registro a partir de un número de cédula suministrado por el usuario, se van haciendo consultas **GET** a los nodos para ver si esta clave se encuentra en nuestra base de datos. Si efectivamente existe, el servidor consulta a los nodos para recopilar cada fragmento del registro en cuestión. Esta información se guarda en un **JSON** que está en el servidor, donde en cada registro se almacena la información recuperada. En caso de no encontrarse el registro que se busca, se responderá con un **error 404 (not found)**.
