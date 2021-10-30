@@ -48,7 +48,7 @@ Fundamentación:
 
 La solución planteada para este problema se puede ver representada en la siguiente arquitectura:
 
-![Arquitectura](https://i.imgur.com/4NOFjpk.png)
+![Arquitectura](https://i.imgur.com/CKPCMGt.png)
 
 ### Cliente
 
